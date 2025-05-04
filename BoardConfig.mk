@@ -164,8 +164,10 @@ TW_DEFAULT_BRIGHTNESS := 200
 TWRP_INCLUDE_LOGCAT := true
 TARGET_USES_LOGD := true
 TW_NO_SCREEN_BLANK := true
+# Haptics
+TW_NO_HAPTICS := true
 # Kernel modules
-TW_LOAD_VENDOR_MODULES := "adsp_loader_dlkm.ko goodix_core.ko leds-qpnp-vibrator-ldo.ko msm_drm.ko qti_battery_charger_main_m81.ko"
+TW_LOAD_VENDOR_MODULES := "adsp_loader_dlkm.ko msm_drm.ko goodix_core.ko goodix_fod.ko nvmem_qfprom.ko pm8941-pwrkey.ko xiaomi_touch.ko msm_kgsl.ko qbt_handler.ko qti_battery_charger.ko"
 # THP fix
 TW_XIAOMI_TOUCH_RMMOD_GOODIX_CORE := true
 
