@@ -1,180 +1,131 @@
 #
-# Copyright (C) 2019 The TwrpBuilder Open-Source Project
+# Copyright (C) 2023 The Android Open Source Project
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
 #
 
+DEVICE_PATH := device/xiaomi/amethyst
+
 # Architecture
-TARGET_ARCH := arm64
-TARGET_ARCH_VARIANT := armv8-a
-TARGET_CPU_ABI := arm64-v8a
-TARGET_CPU_ABI2 :=
+TARGET_ARCH                := arm64
+TARGET_ARCH_VARIANT        := armv8-a
+TARGET_CPU_ABI             := arm64-v8a
+TARGET_CPU_ABI2            :=
 TARGET_CPU_VARIANT := kryo
 TARGET_CPU_VARIANT_RUNTIME := kryo300
 
-TARGET_2ND_ARCH := arm
+TARGET_2ND_ARCH 	       := arm
 TARGET_2ND_ARCH_VARIANT := $(TARGET_ARCH_VARIANT)
-TARGET_2ND_CPU_ABI := armeabi-v7a
-TARGET_2ND_CPU_ABI2 := armeabi
+TARGET_2ND_CPU_ABI         := armeabi-v7a
+TARGET_2ND_CPU_ABI2        := armeabi
 TARGET_2ND_CPU_VARIANT := $(TARGET_CPU_VARIANT)
 TARGET_2ND_CPU_VARIANT_RUNTIME := $(TARGET_CPU_VARIANT_RUNTIME)
 
-ENABLE_CPUSETS := true
-ENABLE_SCHEDBOOST := true
-
 # Bootloader
-PRODUCT_PLATFORM := taro
-TARGET_BOOTLOADER_BOARD_NAME := $(PRODUCT_PLATFORM)
-TARGET_NO_BOOTLOADER := true
-TARGET_USES_UEFI := true
+TARGET_NO_BOOTLOADER          := true
+TARGET_USES_UEFI              := true
 
 # Platform
-TARGET_BOARD_PLATFORM := xiaomi_sm8475
-TARGET_BOARD_PLATFORM_GPU := qcom-adreno730
-QCOM_BOARD_PLATFORMS += xiaomi_sm8475
+TARGET_BOARD_PLATFORM := volcano
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno810
+BOARD_USES_QCOM_HARDWARE      := true
 
 # Kernel
-BOARD_KERNEL_IMAGE_NAME := Image
-BOARD_BOOT_HEADER_VERSION := 4
+BOARD_KERNEL_PAGESIZE         := 4096
+TARGET_KERNEL_ARCH            := arm64
+TARGET_KERNEL_HEADER_ARCH     := arm64
+BOARD_KERNEL_IMAGE_NAME       := Image
+BOARD_BOOT_HEADER_VERSION     := 4
+TARGET_KERNEL_CLANG_COMPILE   := true
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
+BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
+BOARD_MKBOOTIMG_ARGS          += --header_version $(BOARD_BOOT_HEADER_VERSION)
+BOARD_MKBOOTIMG_ARGS          += --pagesize $(BOARD_KERNEL_PAGESIZE)
 
-# Ramdisk use lz4
+# device information for "fastboot update <zip-file>"
+TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
+
+# GSI && GKI
+BOARD_USES_GENERIC_KERNEL_IMAGE := true
+BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
+BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3 # disable hashtree/verification
+BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
+
+# Despite being VA/B device, there is a dedicated recovery partition
+BOARD_USES_RECOVERY_AS_BOOT :=
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT :=
+
+# Use LZ4 Ramdisk compression instead of GZIP
 BOARD_RAMDISK_USE_LZ4 := true
 
-BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
+# Power
+ENABLE_CPUSETS    := true
+ENABLE_SCHEDBOOST := true
 
-# Kernel - prebuilt
-TARGET_FORCE_PREBUILT_KERNEL := true
-ifeq ($(TARGET_FORCE_PREBUILT_KERNEL),true)
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
-endif
-
-# A/B
-# BOARD_USES_RECOVERY_AS_BOOT := true
-
-AB_OTA_UPDATER := true
-
-AB_OTA_PARTITIONS += \
-    boot \
-    dtbo \
-    odm \
-    product \
-    system \
-    system_ext \
-    vbmeta \
-    vbmeta_system \
-    vendor \
-    vendor_boot \
-    vendor_dlkm
-
-# QCOM
-#TARGET_USE_SDCLANG := true
-
-# Avb
+# Verified Boot
 BOARD_AVB_ENABLE := true
-ifeq ($(TW_RECOVERY_AS_BOOT),)
-BOARD_AVB_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
-BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA4096
-BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
-BOARD_AVB_RECOVERY_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
-BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
-endif
+BOARD_AVB_VBMETA_SYSTEM := system
+BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
+BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA2048
+BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
+BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 1
+
+# Allow for building with minimal manifest
+ALLOW_MISSING_DEPENDENCIES := true
+BUILD_BROKEN_USES_NETWORK := true
+BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
 
 # Partitions
-BOARD_BOOTIMAGE_PARTITION_SIZE := 100663296
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 104857600
+BOARD_FLASH_BLOCK_SIZE                := 262144
+BOARD_RECOVERYIMAGE_PARTITION_SIZE    := 104857600
+BOARD_DTBOIMG_PARTITION_SIZE          := 20971520
+BOARD_BOOTIMAGE_PARTITION_SIZE        := 100663296
+BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE  := 8388608
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 100663296
 
-# Dynamic Partition
-BOARD_SUPER_PARTITION_SIZE := 9126805504
-BOARD_SUPER_PARTITION_GROUPS := qti_dynamic_partitions
-# BOARD_SUPER_PARTITION_SIZE - 4MB
+BOARD_USES_METADATA_PARTITION := true
+BOARD_USES_VENDOR_DLKMIMAGE   := true
+BOARD_USES_SYSTEM_DLKMIMAGE   := true
+BOARD_USES_SYSTEM_EXTIMAGE    := true
+
+# Dynamic Partitions
+BOARD_SUPER_PARTITION_SIZE        := 9126805504
+BOARD_SUPER_PARTITION_GROUPS      := qti_dynamic_partitions
 BOARD_QTI_DYNAMIC_PARTITIONS_SIZE := 9122611200
-BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST := product vendor vendor_dlkm system system_ext odm
+BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST += \
+    system \
+    system_ext \
+    product \
+    vendor \
+    vendor_dlkm \
+    odm
 
-# System as root
-BOARD_ROOT_EXTRA_FOLDERS := bluetooth dsp firmware persist
-BOARD_SUPPRESS_SECURE_ERASE := true
+BOARD_PARTITION_LIST := $(call to-upper, $(BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST))
+$(foreach p, $(BOARD_PARTITION_LIST), $(eval BOARD_$(p)IMAGE_FILE_SYSTEM_TYPE := erofs))
+$(foreach p, $(BOARD_PARTITION_LIST), $(eval TARGET_COPY_OUT_$(p) := $(call to-lower, $(p))))
 
-# File systems
-TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_USE_F2FS := true
+BOARD_PARTITION_LIST += SYSTEM_DLKM
+TARGET_COPY_OUT_SYSTEM_DLKM := system_dlkm
+
+# Filesystems
+TARGET_USERIMAGES_USE_EXT4    := true
+TARGET_USERIMAGES_USE_F2FS    := true
+TARGET_USES_MKE2FS            := true
 
 # Workaround for error copying vendor files to recovery ramdisk
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
-TARGET_COPY_OUT_VENDOR := vendor
+
+# System Properties
+TARGET_SYSTEM_PROP := $(DEVICE_PATH)/system.prop
 
 # Recovery
-BOARD_HAS_LARGE_FILESYSTEM := true
-TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
-
-ALLOW_MISSING_DEPENDENCIES := true
-
-# Crypto
-TW_INCLUDE_CRYPTO := true
-TW_INCLUDE_CRYPTO_FBE := true
-TW_INCLUDE_FBE_METADATA_DECRYPT := true
-BOARD_USES_QCOM_FBE_DECRYPTION := true
-BOARD_USES_METADATA_PARTITION := true
-TW_USE_FSCRYPT_POLICY := 2
-ifdef DECRYPT_PLATFORM_VERSION
-PLATFORM_VERSION := $(DECRYPT_PLATFORM_VERSION)
-else
-PLATFORM_VERSION := 14
-endif
-PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
-PLATFORM_SECURITY_PATCH := 2099-12-31
-VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
-BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
-
-# Tool
-TW_INCLUDE_REPACKTOOLS := true
-TW_INCLUDE_RESETPROP := true
-TW_INCLUDE_LIBRESETPROP := true
-TW_INCLUDE_LPDUMP := true
-TW_INCLUDE_LPTOOLS := true
-
-# Network
-BUILD_BROKEN_USES_NETWORK := true
-
-# TWRP specific build flags
-TW_THEME := portrait_hdpi
-ifeq ($(TW_DEVICE_VERSION),)
-TW_DEVICE_VERSION=14.0
-endif
-RECOVERY_SDCARD_ON_DATA := true
+TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 TARGET_RECOVERY_QCOM_RTC_FIX := true
-TW_EXCLUDE_DEFAULT_USB_INIT := true
-TW_EXTRA_LANGUAGES := true
-TW_INCLUDE_NTFS_3G := true
-TW_NO_EXFAT_FUSE := true
-TW_USE_TOOLBOX := true
-TW_INPUT_BLACKLIST := "hbtp_vm"
-TW_BRIGHTNESS_PATH := "/sys/class/backlight/panel0-backlight/brightness"
-TW_MAX_BRIGHTNESS := 2047
-TW_DEFAULT_BRIGHTNESS := 200
-TWRP_INCLUDE_LOGCAT := true
 TARGET_USES_LOGD := true
+
+# Screen
 TW_NO_SCREEN_BLANK := true
-# Haptics
-TW_NO_HAPTICS := true
-# Kernel modules
-TW_LOAD_VENDOR_MODULES := "adsp_loader_dlkm.ko msm_drm.ko goodix_core.ko goodix_fod.ko nvmem_qfprom.ko pm8941-pwrkey.ko xiaomi_touch.ko msm_kgsl.ko qbt_handler.ko qti_battery_charger.ko"
-# THP fix
-TW_XIAOMI_TOUCH_RMMOD_GOODIX_CORE := true
-
-
-TW_EXCLUDE_APEX := true
-TW_HAS_EDL_MODE := false
-TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone27/temp"
-TW_BACKUP_EXCLUSIONS := /data/fonts,/data/adb/ap,/data/adb/ksu
-TW_FRAMERATE := 60
-TW_AB_REC := true
