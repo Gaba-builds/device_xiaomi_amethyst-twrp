@@ -14,17 +14,15 @@
 // limitations under the License.
 //
 
-
-cc_library_shared {
-    name: "android.hardware.boot@1.1-impl-qti",
-    stem: "android.hardware.boot@1.0-impl-1.1-qti",
-    defaults: ["android.hardware.boot@1.1-impl-qti_defaults"],
-    static_libs: ["libgptutils-sg.volcano"],
+cc_library {
+    name: "bootctrl.xiaomi_sm7635",
+    defaults: ["bootctrl_hal_defaults"],
+    static_libs: ["libgptutils.xiaomi_sm7635"],
 }
 
 cc_library_shared {
     name: "android.hardware.boot@1.2-impl-qti",
     stem: "android.hardware.boot@1.0-impl-1.2-qti",
     defaults: ["android.hardware.boot@1.2-impl-qti_defaults"],
-    static_libs: ["libgptutils-bsg.volcano"],
+    static_libs: ["libgptutils.xiaomi_sm7635"],
 }

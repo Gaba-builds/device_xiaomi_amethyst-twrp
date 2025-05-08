@@ -14,29 +14,26 @@
 // limitations under the License.
 //
 
-cc_defaults {
-    name: "libgptutils.volcano",
-    export_include_dirs: ["."],
+
+cc_library {
+    name: "libgptutils.xiaomi_sm7635",
+    vendor: true,
     recovery_available: true,
     shared_libs: [
         "libcutils",
         "liblog",
         "libz",
     ],
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wno-unused-parameter",
+        "-D_BSG_FRAMEWORK_KERNEL_HEADERS",
+    ],
     srcs: [
         "gpt-utils.cpp",
         "recovery-ufs-bsg.cpp",
     ],
-    vendor: true,
-}
-
-cc_library {
-    name: "libgptutils-sg.volcano",
-    defaults: ["libgptutils.volcano"],
-}
-
-cc_library {
-    name: "libgptutils-bsg.volcano",
-    defaults: ["libgptutils.volcano"],
-    cflags: ["-D_BSG_FRAMEWORK_KERNEL_HEADERS"],
+    owner: "qti",
+    export_include_dirs: ["."],
 }

@@ -1,24 +1,34 @@
 #
 # Copyright (C) 2023 The Android Open Source Project
+# Copyright (C) 2023 SebaUbuntu's TWRP device tree generator
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Inherit from these configurations
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
+# Release name
+PRODUCT_RELEASE_NAME := amethyst
+
+# Inherit from those products. Most specific first.
+# 引用默认的编译配置文件，core_64_bit必须先于其他引用，否则不生效
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 
-# Inherit from device configuration
-$(call inherit-product, device/xiaomi/amethyst/device.mk)
+# Enable virtual A/B OTA
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
 
-# Inherit from TWRP common configuration
+# Configure emulated_storage.mk
+$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+
+# Inherit some common TWRP stuff.
 $(call inherit-product, vendor/twrp/config/common.mk)
 
-## Device identifier
+# Inherit from mondrian device
+$(call inherit-product, device/xiaomi/amethyst/device.mk)
+
 PRODUCT_DEVICE := amethyst
 PRODUCT_NAME := twrp_amethyst
 PRODUCT_BRAND := Xiaomi
-PRODUCT_MODEL := Xiaomi Note 14 Pro+ 5G
-PRODUCT_MANUFACTURER := $(PRODUCT_BRAND)
+PRODUCT_MODEL := Redmi Note 14 PRO+ 5G
+PRODUCT_MANUFACTURER := Xiaomi
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi

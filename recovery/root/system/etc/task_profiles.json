@@ -81,21 +81,6 @@
       "Name": "FreezerState",
       "Controller": "freezer",
       "File": "cgroup.freeze"
-    },
-    {
-      "Name": "BfqWeight",
-      "Controller": "io",
-      "File": "io.bfq.weight"
-    },
-    {
-      "Name": "CfqGroupIdle",
-      "Controller": "io",
-      "File": "io.group_idle"
-    },
-    {
-      "Name": "CfqWeight",
-      "Controller": "io",
-      "File": "io.weight"
     }
   ],
 
@@ -213,6 +198,19 @@
           {
             "Controller": "cpu",
             "Path": "camera-daemon"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "CameraPreviewPerformance",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "camera-daemon/limit-level1"
           }
         }
       ]
@@ -454,7 +452,6 @@
         }
       ]
     },
-
     {
       "Name": "CameraServiceCapacity",
       "Actions": [
@@ -517,33 +514,6 @@
           {
             "Controller": "blkio",
             "Path": "background"
-	  }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "BfqWeight",
-            "Value": "10",
-            "Optional": "true"
-          }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "CfqGroupIdle",
-            "Value": "0",
-            "Optional": "true"
-          }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "CfqWeight",
-            "Value": "200",
-            "Optional": "true"
           }
         }
       ]
@@ -557,33 +527,6 @@
           {
             "Controller": "blkio",
             "Path": ""
-	  }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "BfqWeight",
-            "Value": "100",
-            "Optional": "true"
-          }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "CfqGroupIdle",
-            "Value": "0",
-            "Optional": "true"
-          }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "CfqWeight",
-            "Value": "1000",
-            "Optional": "true"
           }
         }
       ]
@@ -597,33 +540,6 @@
           {
             "Controller": "blkio",
             "Path": ""
-	  }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "BfqWeight",
-            "Value": "100",
-            "Optional": "true"
-          }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "CfqGroupIdle",
-            "Value": "0",
-            "Optional": "true"
-          }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "CfqWeight",
-            "Value": "1000",
-            "Optional": "true"
           }
         }
       ]
@@ -637,33 +553,6 @@
           {
             "Controller": "blkio",
             "Path": ""
-	  }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "BfqWeight",
-            "Value": "100",
-            "Optional": "true"
-          }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "CfqGroupIdle",
-            "Value": "0",
-            "Optional": "true"
-          }
-        },
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "CfqWeight",
-            "Value": "1000",
-            "Optional": "true"
           }
         }
       ]
@@ -702,7 +591,7 @@
           "Params":
           {
             "Controller": "cpuset",
-            "Path": "top-app"
+            "Path": "system-background"
           }
         }
       ]
@@ -715,7 +604,7 @@
           "Params":
           {
             "Controller": "cpuset",
-            "Path": "top-app"
+            "Path": "system-background"
           }
         }
       ]
@@ -800,6 +689,19 @@
           {
             "Controller": "memory",
             "Path": "system"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "MemoryFreezeProcess",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "memory",
+            "Path": "freeze-app"
           }
         }
       ]
