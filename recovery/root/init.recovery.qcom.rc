@@ -37,8 +37,7 @@ on early-init
     write /proc/sys/kernel/firmware_config/force_sysfs_fallback 1
 
 on init
-    wait /sys/class/power_supply/battery
-    start health-hal-2-1
+    start boot-hal-1-2
 
 on early-fs
     write /proc/sys/walt/sched_lib_name "recovery,magiskboot,Updater,updater,update_engine_sideload"
@@ -71,6 +70,8 @@ on property:twrp.modules.loaded=true
     # Load ADSP firmware for PMIC
     wait /sys/kernel/boot_adsp/boot
     write /sys/kernel/boot_adsp/boot 1
+    wait /sys/class/power_supply/battery
+    start health-hal-2-1
     start vendor.qseecomd
     umount /firmware
 

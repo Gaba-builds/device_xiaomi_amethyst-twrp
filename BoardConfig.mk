@@ -202,17 +202,18 @@ TW_EXTRA_LANGUAGES := true
 TW_DEFAULT_BRIGHTNESS := 200
 TW_EXCLUDE_APEX := true
 TW_HAS_EDL_MODE := false
-TW_XIAOMI_TOUCH_PERMISSION_FIX := true
+#TW_XIAOMI_TOUCH_PERMISSION_FIX := true
 TW_SUPPORT_INPUT_AIDL_HAPTICS := true
 TW_SUPPORT_INPUT_AIDL_HAPTICS_FQNAME := "IVibrator/vibratorfeature"
+TW_CUSTOM_BATTERY_PATH := "/sys/class/power_supply/battery"
 TW_SUPPORT_INPUT_AIDL_HAPTICS_FIX_OFF := true
 TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID := true
-TW_CUSTOM_CPU_POS := "50"
-TW_CUSTOM_CLOCK_POS := "600"
-TW_CUSTOM_BATTERY_POS := "800"
 # Vendor modules required for the recovery to function properly
-TW_LOAD_VENDOR_MODULES  += "goodix_core.ko
-TW_LOAD_VENDOR_MODULES  += adsp_loader_dlkm.ko qti_battery_debug.ko charger-ulog-glink.ko qcom-hv-haptics.ko aw8697-haptic.ko si_haptic.ko health_monitor.ko qti_battery_charger.ko charger_partition.ko msm_drm.ko msm_ext_display.ko dispcc-volcano.ko pinctrl-volcano.ko gcc-volcano.ko qnoc-volcano.ko debugcc-volcano.ko camcc-volcano.ko "
+TW_LOAD_VENDOR_MODULES := "adsp_loader_dlkm.ko rproc_qcom_common.ko q6_dlkm.ko qcom_q6v5.ko qcom_q6v5_pas.ko qcom_esoc.ko qcom_sysmon.ko goodix_core.ko goodix_fod.ko goodix_health.ko qti_battery_debug.ko goodix_3626.ko charger-ulog-glink.ko focaltech_fts.ko focaltech_touch.ko fts_touch_spi.ko aw882xx_dlkm.ko leds-qpnp-vibrator-ldo.ko qcom-hv-haptics.ko qti_battery_charger.ko xiaomi_touch.ko hwmon.ko"
+TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
+# Battery
+TW_USE_LEGACY_BATTERY_SERVICES := true
+
 TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone1/temp" # CPU-0-0-0
 TW_BATTERY_SYSFS_WAIT_SECONDS          := 6
 TW_BACKUP_EXCLUSIONS := /data/fonts
