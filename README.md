@@ -38,8 +38,6 @@ Works:
 
 ## Building
 
-You can find a full compile guide for OrangeFox [Here](https://wiki.orangefox.tech/en/dev/building)
-
 _Lunch_ command :
 
 ```
