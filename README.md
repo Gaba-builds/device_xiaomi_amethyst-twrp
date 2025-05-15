@@ -22,7 +22,19 @@ Camera                  | 200 MP (wide), 8 MP (ultrawide), 2 MP (macros); 20 MP 
 
 ## Features
 
-- Test:
+Not works:
+
+- [X] Decryption
+- [X] Touchscreen
+
+Works:
+- [X] ADB
+- [X] Display
+- [X] Fasbootd
+- [X] MTP
+- [X] Sideload
+- [X] USB OTG
+- [X] Vibrator
 
 ## Building
 
