@@ -24,11 +24,11 @@ Camera                  | 200 MP (wide), 8 MP (ultrawide), 2 MP (macros); 20 MP 
 
 Not works:
 
-- [X] Decryption
 - [X] Touchscreen
 
 Works:
 - [X] ADB
+- [X] Decryption
 - [X] Display
 - [X] Fasbootd
 - [X] MTP
